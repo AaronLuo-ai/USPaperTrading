@@ -1,0 +1,36 @@
+name: Daily Paper Trade
+
+on:
+  schedule:
+    # 9:10 PM UTC = 4:10 PM ET — runs after US market close, Mon–Fri
+    - cron: '10 21 * * 1-5'
+  workflow_dispatch:   # lets you trigger it manually anytime
+
+jobs:
+  trade:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # needed to commit the report back
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install yfinance
+
+      - name: Run paper trader
+        run: python paper_trade.py
+
+      - name: Commit report and portfolio
+        run: |
+          git config user.name  "Paper Trader Bot"
+          git config user.email "bot@noreply.github.com"
+          git add portfolio.json reports/
+          git diff --staged --quiet && echo "Nothing to commit" || \
+            git commit -m "Trade report $(date -u +%Y-%m-%d)" && git push
