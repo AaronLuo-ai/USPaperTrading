@@ -245,7 +245,7 @@ def generate_html(today, p_before, p_after, trades, analysis, market, news):
         trade_rows = "".join(
             f'<tr><td>{badge(t["action"])}</td><td><strong>{t["ticker"]}</strong></td>'
             f'<td>{t["shares"]} @ ${t["price"]:,.2f}</td><td>${t["total"]:,.2f}'
-            f'{"<br><small style=color:" + clr(t["pnl"]) + ">P&L: $" + f"{t["pnl"]:+,.2f}" + "</small>" if "pnl" in t else ""}'
+            f'{"<br><small style=color:" + clr(t["pnl"]) + ">P&L: $" + format(t["pnl"], "+,.2f") + "</small>" if "pnl" in t else ""}'
             f'</td><td style="font-size:.8rem;color:#555">{t["reason"][:110]}</td></tr>'
             for t in trades
         )
@@ -299,7 +299,7 @@ def generate_html(today, p_before, p_after, trades, analysis, market, news):
         f'<td><strong>{t["ticker"]}</strong></td>'
         f'<td>{t["shares"]} @ ${t["price"]:,.2f}</td><td>${t["total"]:,.2f}</td>'
         f'<td style="color:{clr(t.get("pnl",0))};font-weight:600">'
-        f'{"$" + f"{t["pnl"]:+,.2f}" if "pnl" in t else "—"}</td></tr>'
+        f'{"$" + format(t["pnl"], "+,.2f") if "pnl" in t else "—"}</td></tr>'
         for t in reversed(p_after["trade_history"][-30:])
     ) or '<tr><td colspan="6" style="text-align:center;color:#888;padding:20px">No history yet</td></tr>'
 
